@@ -1,0 +1,87 @@
+#include <SoftwareSerial.h>
+
+// Bluetooth module: RX, TX
+SoftwareSerial bluetooth(2, 3);
+
+// Motor driver pins
+#define IN1 5
+#define IN2 6
+#define IN3 9
+#define IN4 10
+
+char command;
+
+void setup() {
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+
+  bluetooth.begin(9600);
+  Serial.begin(9600);
+
+  stopCar();
+}
+
+void loop() {
+  if (bluetooth.available()) {
+    command = bluetooth.read();
+
+    switch (command) {
+      case 'F':
+        forward();
+        break;
+
+      case 'B':
+        backward();
+        break;
+
+      case 'L':
+        left();
+        break;
+
+      case 'R':
+        right();
+        break;
+
+      case 'S':
+        stopCar();
+        break;
+    }
+  }
+}
+
+void forward() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void backward() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void left() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+}
+
+void right() {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+}
+
+void stopCar() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+}
